@@ -1,2 +1,6 @@
-streamlit
+fastapi
+uvicorn
+sqlalchemy
 scikit-learn
+python-multipart
+streamlit
