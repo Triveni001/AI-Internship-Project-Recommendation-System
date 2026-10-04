@@ -612,7 +612,7 @@ async function registerWithBackend() {
     try {
 
         const response = await fetch(
-            "http://127.0.0.1:8000/register",
+            "https://ai-internship-project-recommendation.onrender.com/register",
             {
                 method: "POST",
 
@@ -680,7 +680,7 @@ async function loginWithBackend() {
     try {
 
         const response = await fetch(
-            "http://127.0.0.1:8000/login",
+            "https://ai-internship-project-recommendation.onrender.com/login",
             {
                 method: "POST",
 
