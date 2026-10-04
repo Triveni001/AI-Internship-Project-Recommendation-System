@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Recommended Projects</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .projects-page {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .projects-heading {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .projects-heading h1 {
+            margin-bottom: 10px;
+        }
+
+        .projects-heading p {
+            color: #666;
+        }
+
+        .project-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.10);
+            transition: transform 0.2s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-card h2 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .project-category {
+            display: inline-block;
+            background: #eef2ff;
+            color: #4f46e5;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .project-description {
+            color: #555;
+            line-height: 1.6;
+            min-height: 70px;
+        }
+
+        .project-skills {
+            margin-top: 15px;
+            color: #444;
+        }
+
+        .match-box {
+            margin-top: 18px;
+            padding: 12px;
+            background: #f0fdf4;
+            border-radius: 10px;
+            color: #15803d;
+            font-weight: bold;
+        }
+
+        .project-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .project-buttons button,
+        .project-buttons a {
+            flex: 1;
+            padding: 11px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .view-btn {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .save-btn {
+            background: #111827;
+            color: white;
+        }
+
+        .save-btn.saved {
+            background: #16a34a;
+        }
+
+        .loading-message,
+        .error-message,
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+        }
+
+        .error-message {
+            color: #dc2626;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="profile.html">Profile</a>
+            <a href="skills.html">Skills</a>
+            <a href="interests.html">Interests</a>
+            <a href="dashboard.html">Internships</a>
+            <a href="projects.html">Projects</a>
+            <a href="my-projects.html">My Projects</a>
+        </nav>
+    </header>
+
+
+    <!-- Main Content -->
+    <main class="projects-page">
+
+        <div class="projects-heading">
+
+            <h1>Recommended Projects</h1>
+
+            <p>
+                AI-powered projects recommended based on your skills.
+            </p>
+
+        </div>
+
+
+        <!-- Projects will appear here -->
+        <div
+            id="projectContainer"
+            class="project-container"
+        >
+
+            <div class="loading-message">
+                Loading recommended projects...
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <script>
+
+        // Get logged-in student ID
+        const studentId =
+            localStorage.getItem("studentId");
+
+
+        // Project detail page mapping
+        function getProjectPage(projectId) {
+
+            if (projectId === 1) {
+                return "ai-project.html";
+            }
+
+            if (projectId === 2) {
+                return "ml-project.html";
+            }
+
+            if (projectId === 3) {
+                return "projects.html";
+            }
+            if(projectId==4) {
+                return"campus-project.html";
+            }
+
+            return "projects.html";
+        }
+
+
+        // Save project
+        async function saveProject(projectId, button) {
+
+            if (!studentId) {
+
+                alert(
+                    "Student login required. Please login first."
+                );
+
+                return;
+            }
+
+
+            try {
+
+                const response = await fetch(
+                    `http://127.0.0.1:8000/student/${studentId}/save-project/${projectId}`,
+                    {
+                        method: "POST"
+                    }
+                );
+
+
+                const result =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    if (
+                        result.detail &&
+                        result.detail.toLowerCase().includes("already")
+                    ) {
+
+                        button.innerText =
+                            "Saved ✓";
+
+                        button.classList.add("saved");
+
+                        return;
+                    }
+
+
+                    alert(
+                        result.detail ||
+                        "Could not save project."
+                    );
+
+                    return;
+                }
+
+
+                button.innerText =
+                    "Saved ✓";
+
+                button.classList.add("saved");
+
+
+                alert(
+                    "Project saved successfully!"
+                );
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert(
+                    "Backend connection failed. Please check if FastAPI server is running."
+                );
+            }
+        }
+
+
+        // Load AI recommended projects
+        async function loadProjects() {
+
+            const container =
+                document.getElementById(
+                    "projectContainer"
+                );
+
+
+            if (!studentId) {
+
+                container.innerHTML = `
+                    <div class="error-message">
+                        <h3>Student login required</h3>
+                        <p>Please login to see your recommended projects.</p>
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `http://127.0.0.1:8000/student/${studentId}/project-recommendations`
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Could not load project recommendations."
+                    );
+                }
+
+
+                const projects =
+                    await response.json();
+
+
+                if (
+                    !projects ||
+                    projects.length === 0
+                ) {
+
+                    container.innerHTML = `
+                        <div class="empty-message">
+                            <h3>No projects found</h3>
+                            <p>
+                                Add some skills to your profile
+                                to get project recommendations.
+                            </p>
+                        </div>
+                    `;
+
+                    return;
+                }
+
+
+                container.innerHTML = "";
+
+
+                projects.forEach(
+                    function (project) {
+
+                        const card =
+                            document.createElement(
+                                "div"
+                            );
+
+                        card.className =
+                            "project-card";
+
+
+                        const skills =
+                            project.skills
+                                ? project.skills
+                                : "Not specified";
+
+
+                        const projectPage =
+                            getProjectPage(
+                                project.project_id
+                            );
+
+
+                        card.innerHTML = `
+
+                            <span class="project-category">
+                                ${project.category || "Project"}
+                            </span>
+
+                            <h2>
+                                ${project.title}
+                            </h2>
+
+                            <p class="project-description">
+                                ${project.description || "No description available."}
+                            </p>
+
+                            <p class="project-skills">
+                                <strong>Required Skills:</strong>
+                                ${skills}
+                            </p>
+
+                            <div class="match-box">
+                                AI Match:
+                                ${project.match_percentage}%
+                            </div>
+
+                            <div class="project-buttons">
+
+                                <a
+                                    href="${projectPage}"
+                                    class="view-btn"
+                                >
+                                    View Project
+                                </a>
+
+                                <button
+                                    class="save-btn"
+                                    onclick="saveProject(
+                                        ${project.project_id},
+                                        this
+                                    )"
+                                >
+                                    Save Project
+                                </button>
+
+                            </div>
+                        `;
+
+
+                        container.appendChild(card);
+
+                    }
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                container.innerHTML = `
+                    <div class="error-message">
+
+                        <h3>
+                            Unable to load projects
+                        </h3>
+
+                        <p>
+                            Please make sure the FastAPI
+                            backend is running.
+                        </p>
+
+                    </div>
+                `;
+            }
+        }
+
+
+        // Start loading projects
+        loadProjects();
+
+    </script>
+
+</body>
+
+</html>

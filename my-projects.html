@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>My Projects - AI Matcher</title>
+
+    <link rel="stylesheet"
+        href="style.css">
+
+</head>
+
+
+<body>
+
+<header>
+
+    <div class="logo">
+        AI Matcher
+    </div>
+
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="dashboard.html">
+            Internships
+        </a>
+
+        <a href="projects.html">
+            Projects
+        </a>
+
+        <a href="profile-view.html">
+            Profile
+        </a>
+
+    </nav>
+
+</header>
+
+
+<section class="dashboard">
+
+    <h1>
+        My Saved Projects
+    </h1>
+
+    <p class="dashboard-subtitle">
+        Projects you saved for future work.
+    </p>
+
+
+    <div
+        id="projectContainer"
+        class="internship-container"
+    >
+
+        <p>
+            Loading saved projects...
+        </p>
+
+    </div>
+
+</section>
+
+
+<script>
+
+async function loadSavedProjects() {
+
+    const container =
+        document.getElementById(
+            "projectContainer"
+        );
+
+
+    // Get the currently logged-in student
+    const studentId =
+        localStorage.getItem("studentId");
+
+
+    if (!studentId) {
+
+        container.innerHTML = `
+
+            <div class="internship-card">
+
+                <h2>
+                    Please Login
+                </h2>
+
+                <p>
+                    Login first to see your
+                    saved projects.
+                </p>
+
+                <a
+                    href="login.html"
+                    class="btn"
+                >
+                    Login
+                </a>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    try {
+
+        const response = await fetch(
+
+            "http://127.0.0.1:8000/student/"
+            + studentId
+            + "/saved-projects"
+
+        );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP Error: "
+                + response.status
+            );
+
+        }
+
+
+        const projects =
+            await response.json();
+
+
+        container.innerHTML = "";
+
+
+        if (
+            !Array.isArray(projects)
+            || projects.length === 0
+        ) {
+
+            container.innerHTML = `
+
+                <div class="internship-card">
+
+                    <h2>
+                        No Saved Projects
+                    </h2>
+
+                    <p>
+                        You have not saved
+                        any projects yet.
+                    </p>
+
+                    <a
+                        href="projects.html"
+                        class="btn"
+                    >
+                        Explore Projects
+                    </a>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        projects.forEach(
+            function(project) {
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                card.className =
+                    "internship-card";
+
+
+                card.innerHTML = `
+
+                    <h2>
+                        ${project.title}
+                    </h2>
+
+                    <p>
+                        ${project.description}
+                    </p>
+
+                    <p>
+                        <strong>
+                            Skills:
+                        </strong>
+                        ${project.skills}
+                    </p>
+
+                    <p>
+                        <strong>
+                            Category:
+                        </strong>
+                        ${project.category}
+                    </p>
+
+                    <div class="match">
+                        Saved Project
+                    </div>
+
+                    <a
+                        href="projects.html"
+                        class="btn"
+                        style="
+                            display:block;
+                            text-align:center;
+                            text-decoration:none;
+                        "
+                    >
+                        Find More Projects
+                    </a>
+
+                `;
+
+
+                container.appendChild(
+                    card
+                );
+
+            }
+        );
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Saved projects error:",
+            error
+        );
+
+
+        container.innerHTML = `
+
+            <div class="internship-card">
+
+                <h2>
+                    Unable to Load Projects
+                </h2>
+
+                <p>
+                    Please check whether
+                    backend server is running.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+loadSavedProjects();
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Skill Gap Analysis</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        .skill-gap-page {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .page-heading {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .page-heading h1 {
+            margin-bottom: 10px;
+        }
+
+        .page-heading p {
+            color: #666;
+        }
+
+        .selection-box {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.10);
+            margin-bottom: 25px;
+        }
+
+        .selection-box label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .selection-box select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .result-box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.10);
+        }
+
+        .result-title {
+            margin-top: 0;
+        }
+
+        .match-box {
+            background: #eefcf3;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .match-percentage {
+            font-size: 32px;
+            font-weight: bold;
+            color: #16a34a;
+        }
+
+        .skill-section {
+            margin-top: 25px;
+        }
+
+        .skill-section h3 {
+            margin-bottom: 12px;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-tag {
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .your-skill {
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+        .matched-skill {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .missing-skill {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .learn-box {
+            margin-top: 25px;
+            padding: 20px;
+            background: #fff7ed;
+            border-radius: 12px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+        }
+
+        .error {
+            text-align: center;
+            padding: 30px;
+            color: #dc2626;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- Navigation -->
+
+    <header>
+
+        <nav>
+
+            <a href="index.html">Home</a>
+
+            <a href="profile.html">Profile</a>
+
+            <a href="skills.html">Skills</a>
+
+            <a href="interests.html">Interests</a>
+
+            <a href="dashboard.html">Internships</a>
+
+            <a href="projects.html">Projects</a>
+
+            <a href="skill-gap.html">Skill Gap</a>
+
+            <a href="my-projects.html">My Projects</a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- Main -->
+
+    <main class="skill-gap-page">
+
+
+        <div class="page-heading">
+
+            <h1>Skill Gap Analysis</h1>
+
+            <p>
+                Find which skills you already have
+                and which skills you need to learn.
+            </p>
+
+        </div>
+
+
+        <!-- Internship Selection -->
+
+        <div class="selection-box">
+
+            <label for="internshipSelect">
+                Select an Internship
+            </label>
+
+            <select id="internshipSelect">
+
+                <option value="">
+                    Loading internships...
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- Result -->
+
+        <div
+            id="resultContainer"
+            class="result-box"
+        >
+
+            <div class="empty">
+
+                <h3>
+                    Select an internship
+                </h3>
+
+                <p>
+                    Choose an internship above
+                    to see your skill gap.
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+
+    <script>
+
+
+        // Get logged-in student
+
+        const studentId =
+            localStorage.getItem("studentId");
+
+
+        const internshipSelect =
+            document.getElementById(
+                "internshipSelect"
+            );
+
+
+        const resultContainer =
+            document.getElementById(
+                "resultContainer"
+            );
+
+
+        let studentData = null;
+
+        let internships = [];
+
+
+        // Convert skills into clean array
+
+        function convertSkills(skillText) {
+
+            if (!skillText) {
+                return [];
+            }
+
+            return skillText
+                .split(",")
+                .map(function(skill) {
+
+                    return skill
+                        .trim()
+                        .toLowerCase();
+
+                })
+                .filter(function(skill) {
+
+                    return skill.length > 0;
+
+                });
+
+        }
+
+
+        // Load student data
+
+        async function loadStudent() {
+
+            if (!studentId) {
+
+                resultContainer.innerHTML = `
+                    <div class="error">
+
+                        <h3>
+                            Student login required
+                        </h3>
+
+                        <p>
+                            Please login first.
+                        </p>
+
+                    </div>
+                `;
+
+                return false;
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `http://127.0.0.1:8000/student/${studentId}`
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Unable to load student data."
+                    );
+
+                }
+
+
+                studentData =
+                    await response.json();
+
+
+                return true;
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                resultContainer.innerHTML = `
+                    <div class="error">
+
+                        <h3>
+                            Unable to load student profile
+                        </h3>
+
+                        <p>
+                            Please make sure FastAPI is running.
+                        </p>
+
+                    </div>
+                `;
+
+                return false;
+            }
+        }
+
+
+        // Load internships
+
+        async function loadInternships() {
+
+            try {
+
+                const response =
+                    await fetch(
+                        "http://127.0.0.1:8000/internships"
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Unable to load internships."
+                    );
+
+                }
+
+
+                internships =
+                    await response.json();
+
+
+                internshipSelect.innerHTML = `
+                    <option value="">
+                        -- Select Internship --
+                    </option>
+                `;
+
+
+                internships.forEach(
+                    function(internship) {
+
+                        const option =
+                            document.createElement(
+                                "option"
+                            );
+
+
+                        option.value =
+                            internship.id;
+
+
+                        option.textContent =
+                            internship.title +
+                            " - " +
+                            internship.company;
+
+
+                        internshipSelect.appendChild(
+                            option
+                        );
+
+                    }
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                internshipSelect.innerHTML = `
+                    <option value="">
+                        Unable to load internships
+                    </option>
+                `;
+
+            }
+        }
+
+
+        // Analyze skill gap
+
+        function analyzeSkillGap(
+            internshipId
+        ) {
+
+            const internship =
+                internships.find(
+                    function(item) {
+
+                        return String(item.id) ===
+                            String(internshipId);
+
+                    }
+                );
+
+
+            if (!internship) {
+
+                return;
+
+            }
+
+
+            // Student skills
+
+            const technicalSkills =
+                convertSkills(
+                    studentData.technical_skills
+                );
+
+
+            const selectedSkills =
+                convertSkills(
+                    studentData.selected_skills
+                );
+
+
+            // Combine student skills
+
+            const studentSkills =
+                [
+                    ...new Set(
+                        technicalSkills.concat(
+                            selectedSkills
+                        )
+                    )
+                ];
+
+
+            // Required internship skills
+
+            const requiredSkills =
+                convertSkills(
+                    internship.skills
+                );
+
+
+            // Find matched skills
+
+            const matchedSkills =
+                studentSkills.filter(
+                    function(skill) {
+
+                        return requiredSkills.includes(
+                            skill
+                        );
+
+                    }
+                );
+
+
+            // Find missing skills
+
+            const missingSkills =
+                requiredSkills.filter(
+                    function(skill) {
+
+                        return !studentSkills.includes(
+                            skill
+                        );
+
+                    }
+                );
+
+
+            // Calculate percentage
+
+            let matchPercentage = 0;
+
+
+            if (requiredSkills.length > 0) {
+
+                matchPercentage =
+                    Math.round(
+                        (
+                            matchedSkills.length /
+                            requiredSkills.length
+                        ) * 100
+                    );
+
+            }
+
+
+            // Display result
+
+            resultContainer.innerHTML = `
+
+                <h2 class="result-title">
+                    ${internship.title}
+                </h2>
+
+                <p>
+                    <strong>Company:</strong>
+                    ${internship.company}
+                </p>
+
+                <div class="match-box">
+
+                    <div>
+                        Your Skill Match
+                    </div>
+
+                    <div class="match-percentage">
+                        ${matchPercentage}%
+                    </div>
+
+                </div>
+
+
+                <div class="skill-section">
+
+                    <h3>
+                        Your Skills
+                    </h3>
+
+                    <div class="skill-list">
+
+                        ${
+                            studentSkills.length > 0
+
+                            ?
+
+                            studentSkills.map(
+                                function(skill) {
+
+                                    return `
+                                        <span
+                                            class="skill-tag your-skill"
+                                        >
+                                            ${skill}
+                                        </span>
+                                    `;
+
+                                }
+                            ).join("")
+
+                            :
+
+                            `
+                                <p>
+                                    No skills added yet.
+                                </p>
+                            `
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <div class="skill-section">
+
+                    <h3>
+                        Matched Skills
+                    </h3>
+
+                    <div class="skill-list">
+
+                        ${
+                            matchedSkills.length > 0
+
+                            ?
+
+                            matchedSkills.map(
+                                function(skill) {
+
+                                    return `
+                                        <span
+                                            class="skill-tag matched-skill"
+                                        >
+                                            ✓ ${skill}
+                                        </span>
+                                    `;
+
+                                }
+                            ).join("")
+
+                            :
+
+                            `
+                                <p>
+                                    No matching skills yet.
+                                </p>
+                            `
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <div class="skill-section">
+
+                    <h3>
+                        Missing Skills
+                    </h3>
+
+                    <div class="skill-list">
+
+                        ${
+                            missingSkills.length > 0
+
+                            ?
+
+                            missingSkills.map(
+                                function(skill) {
+
+                                    return `
+                                        <span
+                                            class="skill-tag missing-skill"
+                                        >
+                                            ${skill}
+                                        </span>
+                                    `;
+
+                                }
+                            ).join("")
+
+                            :
+
+                            `
+                                <p>
+                                    🎉 You have all required skills!
+                                </p>
+                            `
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <div class="learn-box">
+
+                    <h3>
+                        Skills to Learn
+                    </h3>
+
+                    ${
+                        missingSkills.length > 0
+
+                        ?
+
+                        `
+                            <p>
+                                Focus on learning:
+                                <strong>
+                                    ${missingSkills.join(", ")}
+                                </strong>
+                            </p>
+
+                            <p>
+                                Improving these skills
+                                can increase your internship
+                                eligibility.
+                            </p>
+                        `
+
+                        :
+
+                        `
+                            <p>
+                                Your current skills are
+                                sufficient for this internship.
+                            </p>
+                        `
+                    }
+
+                </div>
+
+            `;
+
+        }
+
+
+        // Internship selection event
+
+        internshipSelect.addEventListener(
+            "change",
+            function() {
+
+                const selectedId =
+                    internshipSelect.value;
+
+
+                if (!selectedId) {
+
+                    resultContainer.innerHTML = `
+                        <div class="empty">
+
+                            <h3>
+                                Select an internship
+                            </h3>
+
+                            <p>
+                                Choose an internship above
+                                to see your skill gap.
+                            </p>
+
+                        </div>
+                    `;
+
+                    return;
+                }
+
+
+                analyzeSkillGap(
+                    selectedId
+                );
+
+            }
+        );
+
+
+        // Start page
+
+        async function initializePage() {
+
+            resultContainer.innerHTML = `
+                <div class="loading">
+                    Loading your skill gap analysis...
+                </div>
+            `;
+
+
+            const studentLoaded =
+                await loadStudent();
+
+
+            if (!studentLoaded) {
+
+                return;
+
+            }
+
+
+            await loadInternships();
+
+
+            resultContainer.innerHTML = `
+                <div class="empty">
+
+                    <h3>
+                        Select an internship
+                    </h3>
+
+                    <p>
+                        Choose an internship above
+                        to see your skill gap.
+                    </p>
+
+                </div>
+            `;
+
+        }
+
+
+        initializePage();
+
+
+    </script>
+
+
+</body>
+
+</html>

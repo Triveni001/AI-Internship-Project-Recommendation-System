@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Machine Learning Prediction System - AI Matcher</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #222;
+        }
+
+        nav {
+            width: 100%;
+            background: white;
+            padding: 18px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .nav-links a:hover {
+            color: #2563eb;
+        }
+
+        .page {
+            min-height: calc(100vh - 70px);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 60px 20px;
+        }
+
+        .project-card {
+            width: 100%;
+            max-width: 750px;
+            background: white;
+            padding: 45px;
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.10);
+        }
+
+        .category {
+            display: inline-block;
+            background: #e8f0ff;
+            color: #2563eb;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            font-size: 38px;
+            margin: 0 0 10px 0;
+            color: #1f2937;
+        }
+
+        .subtitle {
+            color: #2563eb;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 35px;
+        }
+
+        h2 {
+            font-size: 22px;
+            margin-top: 28px;
+            margin-bottom: 10px;
+            color: #1f2937;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .skill {
+            background: #eef2ff;
+            color: #374151;
+            padding: 9px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        ul {
+            padding-left: 22px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .difficulty {
+            display: inline-block;
+            background: #fff4e5;
+            color: #d97706;
+            padding: 9px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .match-box {
+            margin-top: 25px;
+            padding: 18px;
+            background: #ecfdf5;
+            border-radius: 12px;
+            color: #15803d;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .button-area {
+            margin-top: 30px;
+        }
+
+        .save-button {
+            width: 100%;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background: #1d4ed8;
+        }
+
+        .save-button.saved {
+            background: #16a34a;
+        }
+
+        @media (max-width: 700px) {
+
+            nav {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                justify-content: center;
+            }
+
+            .page {
+                padding: 30px 15px;
+            }
+
+            .project-card {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 30px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <nav>
+
+        <div class="logo">
+            AI Matcher
+        </div>
+
+        <div class="nav-links">
+
+            <a href="index.html">Home</a>
+
+            <a href="profile.html">Profile</a>
+
+            <a href="skills.html">Skills</a>
+
+            <a href="interests.html">Interests</a>
+
+            <a href="dashboard.html">Internships</a>
+
+            <a href="projects.html">Projects</a>
+
+            <a href="my-projects.html">My Projects</a>
+
+        </div>
+
+    </nav>
+
+
+    <main class="page">
+
+        <div class="project-card">
+
+            <div class="category">
+                Machine Learning
+            </div>
+
+
+            <h1>
+                Machine Learning Prediction System
+            </h1>
+
+
+            <div class="subtitle">
+                Machine Learning Project
+            </div>
+
+
+            <h2>
+                Project Description
+            </h2>
+
+            <p>
+                Machine learning project for predicting outcomes
+                from student data using data analysis and
+                machine learning techniques.
+            </p>
+
+
+            <h2>
+                Required Skills
+            </h2>
+
+            <div class="skills">
+
+                <span class="skill">
+                    Python
+                </span>
+
+                <span class="skill">
+                    Machine Learning
+                </span>
+
+                <span class="skill">
+                    Data Science
+                </span>
+
+            </div>
+
+
+            <h2>
+                Project Features
+            </h2>
+
+            <ul>
+
+                <li>
+                    Student data analysis
+                </li>
+
+                <li>
+                    Data preprocessing
+                </li>
+
+                <li>
+                    Machine learning model training
+                </li>
+
+                <li>
+                    Prediction of student outcomes
+                </li>
+
+                <li>
+                    Model performance evaluation
+                </li>
+
+            </ul>
+
+
+            <h2>
+                Difficulty
+            </h2>
+
+            <span class="difficulty">
+                Intermediate
+            </span>
+
+
+            <h2>
+                AI Match
+            </h2>
+
+            <div class="match-box">
+                Your skills match this project based on the AI recommendation system.
+            </div>
+
+
+            <div class="button-area">
+
+                <button
+                    class="save-button"
+                    id="saveButton"
+                    onclick="saveProject()"
+                >
+                    Add to My Projects
+                </button>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <script>
+
+        async function saveProject() {
+
+            const studentId =
+                localStorage.getItem("studentId");
+
+            const button =
+                document.getElementById("saveButton");
+
+
+            if (!studentId) {
+
+                alert("Please login first.");
+
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `http://127.0.0.1:8000/student/${studentId}/save-project/2`,
+                        {
+                            method: "POST"
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    alert(
+                        result.detail ||
+                        "Unable to save project."
+                    );
+
+                    return;
+                }
+
+
+                button.innerText =
+                    "Saved ✓";
+
+                button.classList.add("saved");
+
+
+                alert(
+                    "Machine Learning Prediction System saved successfully!"
+                );
+
+            }
+            catch (error) {
+
+                console.error(error);
+
+                alert(
+                    "Backend connection failed. Please make sure FastAPI is running."
+                );
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>

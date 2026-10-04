@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Select Interests - AI Matcher</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="form-container">
+
+    <h1>Select Your Interests</h1>
+
+    <p>Choose the areas you are interested in.</p>
+
+    <form>
+
+        <label>
+            <input type="checkbox" name="interest" value="ai">
+            Artificial Intelligence
+        </label>
+
+        <label>
+            <input type="checkbox" name="interest" value="ml">
+            Machine Learning
+        </label>
+
+        <label>
+            <input type="checkbox" name="interest" value="web">
+            Web Development
+        </label>
+
+        <label>
+            <input type="checkbox" name="interest" value="app">
+            App Development
+        </label>
+
+        <label>
+            <input type="checkbox" name="interest" value="data">
+            Data Science
+        </label>
+
+        <label>
+            <input type="checkbox" name="interest" value="cybersecurity">
+            Cybersecurity
+        </label>
+
+        <label>
+            <input type="checkbox" name="interest" value="cloud">
+            Cloud Computing
+        </label>
+
+        <label>
+            <input type="checkbox" name="interest" value="iot">
+            IoT
+        </label>
+
+        <label>
+            <input type="checkbox" name="interest" value="software">
+            Software Development
+        </label>
+
+        <label>
+            <input type="checkbox" name="interest" value="uiux">
+            UI/UX Design
+        </label>
+
+        <button
+            type="button"
+            class="btn"
+            onclick="saveInterestsToBackend()">
+            Find My Opportunities
+        </button>
+
+    </form>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

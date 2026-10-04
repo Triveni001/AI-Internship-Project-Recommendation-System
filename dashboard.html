@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Recommended Internships - AI Matcher</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+<header>
+
+    <div class="logo">
+        AI Matcher
+    </div>
+
+    <nav>
+
+        <a href="index.html">Home</a>
+
+        <a href="profile.html">Profile</a>
+
+        <a href="skills.html">Skills</a>
+
+        <a href="interests.html">Interests</a>
+
+        <a href="projects.html">Projects</a>
+
+        <a href="applications.html">Applications</a>
+
+    </nav>
+
+</header>
+
+
+<section class="dashboard">
+
+    <h1>
+        Recommended Internships
+    </h1>
+
+    <p class="dashboard-subtitle">
+        AI-powered opportunities matched with your skills.
+    </p>
+
+
+    <div
+        id="internshipContainer"
+        class="internship-container"
+    >
+
+        <p>
+            Loading internships...
+        </p>
+
+    </div>
+
+</section>
+
+
+<script>
+
+async function loadInternships() {
+
+    const container =
+        document.getElementById(
+            "internshipContainer"
+        );
+
+
+    const studentId =
+        localStorage.getItem("studentId");
+
+
+    if (!studentId) {
+
+        container.innerHTML = `
+
+            <div class="internship-card">
+
+                <h2>
+                    Please Login
+                </h2>
+
+                <p>
+                    Login to get your AI-powered
+                    internship recommendations.
+                </p>
+
+                <a
+                    href="login.html"
+                    class="btn"
+                >
+                    Login
+                </a>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    try {
+
+        const response = await fetch(
+
+            "http://127.0.0.1:8000/student/"
+            + studentId
+            + "/recommendations"
+
+        );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP Error: "
+                + response.status
+            );
+
+        }
+
+
+        const internships =
+            await response.json();
+
+
+        console.log(
+            "AI Recommendations:",
+            internships
+        );
+
+
+        container.innerHTML = "";
+
+
+        if (
+            !Array.isArray(internships)
+            ||
+            internships.length === 0
+        ) {
+
+            container.innerHTML = `
+
+                <div class="internship-card">
+
+                    <h2>
+                        No Recommendations Found
+                    </h2>
+
+                    <p>
+                        Please update your skills
+                        and interests.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        internships.forEach(
+            function(internship) {
+
+                const card =
+                    document.createElement("div");
+
+
+                card.className =
+                    "internship-card";
+
+
+                const detailsPage =
+                    "internship-details.html?id="
+                    + internship.internship_id;
+
+
+                card.innerHTML = `
+
+                    <h2>
+                        ${internship.title}
+                    </h2>
+
+
+                    <p class="company">
+                        ${internship.company}
+                    </p>
+
+
+                    <p>
+                        Required Skills:
+                        ${internship.skills}
+                    </p>
+
+
+                    <p>
+                        Duration:
+                        ${internship.duration}
+                    </p>
+
+
+                    <p>
+                        Location:
+                        ${internship.location}
+                    </p>
+
+
+                    <div class="match">
+
+                        AI Match:
+                        ${internship.match_percentage}%
+
+                    </div>
+
+
+                    <a
+                        href="${detailsPage}"
+                        class="btn"
+                        style="
+                            display:block;
+                            text-align:center;
+                            text-decoration:none;
+                            margin-top:15px;
+                        "
+                    >
+                        View Internship
+                    </a>
+
+                `;
+
+
+                container.appendChild(card);
+
+            }
+        );
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "AI recommendation error:",
+            error
+        );
+
+
+        container.innerHTML = `
+
+            <div class="internship-card">
+
+                <h2>
+                    Unable to Load Recommendations
+                </h2>
+
+                <p>
+                    Please check whether the
+                    backend server is running.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+loadInternships();
+
+</script>
+
+
+</body>
+
+</html>

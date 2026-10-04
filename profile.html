@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Profile - AI Matcher</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="form-container">
+
+    <h1>Student Profile</h1>
+
+    <p>Complete your profile for better recommendations.</p>
+
+    <form>
+
+        <label>College Name</label>
+        <input type="text" id="college" placeholder="College name">
+
+        <label>Degree</label>
+        <select id="degree">
+            <option value="">Select degree</option>
+            <option value="B.Tech">B.Tech</option>
+            <option value="B.E">B.E</option>
+            <option value="M.Tech">M.Tech</option>
+            <option value="MCA">MCA</option>
+            <option value="BCA">BCA</option>
+        </select>
+
+        <label>Graduation Year</label>
+        <select id="graduationYear">
+            <option value="">Select year</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+            <option value="2028">2028</option>
+            <option value="2029">2029</option>
+        </select>
+
+        <label>Technical Skills</label>
+        <input type="text" id="technicalSkills"
+               placeholder="Python, Java, SQL">
+
+        <label>Interests</label>
+        <input type="text" id="profileInterests"
+               placeholder="AI, Web Development">
+
+        <label>Projects</label>
+        <input type="text" id="projects"
+               placeholder="AI Chatbot">
+
+        <label>Certifications</label>
+        <input type="text" id="certifications"
+               placeholder="Python Certificate">
+
+        <button
+            type="button"
+            class="btn"
+            onclick="saveProfileToBackend()">
+            Save Profile
+        </button>
+
+    </form>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

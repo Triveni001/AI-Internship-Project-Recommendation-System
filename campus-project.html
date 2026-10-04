@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Campus Management - AI Matcher</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        body {
+            background: #f5f7fb;
+        }
+
+        .project-details {
+            max-width: 850px;
+            margin: 50px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .project-details h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #222;
+        }
+
+        .project-category {
+            text-align: center;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 35px;
+        }
+
+        .project-details h2 {
+            margin-top: 28px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .project-details p {
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .skill {
+            background: #eef2ff;
+            color: #4f46e5;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .features {
+            padding-left: 20px;
+            color: #555;
+            line-height: 2;
+        }
+
+        .difficulty-box {
+            display: inline-block;
+            padding: 10px 18px;
+            background: #fff4e5;
+            color: #b45309;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .match-box {
+            margin-top: 15px;
+            padding: 20px;
+            background: #eefbf3;
+            border-left: 5px solid #22c55e;
+            border-radius: 10px;
+            color: #166534;
+            font-weight: 600;
+        }
+
+        .action-area {
+            text-align: center;
+            margin-top: 35px;
+        }
+
+        .save-btn {
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 13px 28px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 15px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+
+        <div class="logo">
+            AI Matcher
+        </div>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="dashboard.html">Internships</a>
+            <a href="projects.html">Projects</a>
+            <a href="profile-view.html">Profile</a>
+        </nav>
+
+    </header>
+
+
+    <section class="dashboard">
+
+        <div class="project-details">
+
+            <h1>
+                Smart Campus Management
+            </h1>
+
+            <p class="project-category">
+                Web Development
+            </p>
+
+
+            <h2>
+                Project Description
+            </h2>
+
+            <p>
+                Build a web-based Smart Campus Management platform
+                that helps students and administrators manage campus
+                activities, events, student services and academic
+                information from a single system.
+            </p>
+
+
+            <h2>
+                Required Skills
+            </h2>
+
+            <div class="skills-list">
+
+                <span class="skill">HTML</span>
+
+                <span class="skill">CSS</span>
+
+                <span class="skill">JavaScript</span>
+
+                <span class="skill">React</span>
+
+                <span class="skill">SQL</span>
+
+            </div>
+
+
+            <h2>
+                Project Features
+            </h2>
+
+            <ul class="features">
+
+                <li>Student dashboard</li>
+
+                <li>Campus event management</li>
+
+                <li>Student service management</li>
+
+                <li>Notifications and announcements</li>
+
+                <li>Academic information management</li>
+
+            </ul>
+
+
+            <h2>
+                Difficulty
+            </h2>
+
+            <div class="difficulty-box">
+                Intermediate
+            </div>
+
+
+            <h2>
+                AI Match
+            </h2>
+
+            <div class="match-box">
+                Your profile matches this project based on your
+                technical skills and interests.
+            </div>
+
+
+            <div class="action-area">
+
+                <button
+                    id="saveProjectBtn"
+                    class="btn save-btn"
+                    onclick="saveProject()"
+                >
+                    Add to My Projects
+                </button>
+
+                <br>
+
+                <a
+                    href="projects.html"
+                    class="back-btn"
+                >
+                    ← Back to Projects
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <script>
+
+        async function saveProject() {
+
+            const studentId =
+                localStorage.getItem("studentId");
+
+            if (!studentId) {
+
+                alert("Please login first.");
+
+                window.location.href = "login.html";
+
+                return;
+            }
+
+
+            const button =
+                document.getElementById("saveProjectBtn");
+
+
+            try {
+
+                const response = await fetch(
+                    "http://127.0.0.1:8000/student/"
+                    + studentId
+                    + "/save-project/4",
+                    {
+                        method: "POST"
+                    }
+                );
+
+
+                const data =
+                    await response.json();
+
+
+                if (response.ok) {
+
+                    alert(
+                        data.message ||
+                        "Project saved successfully!"
+                    );
+
+                    button.innerText =
+                        "Saved ✓";
+
+                    button.disabled = true;
+
+                } else {
+
+                    alert(
+                        data.detail ||
+                        "Could not save project."
+                    );
+
+                }
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert(
+                    "Backend connection failed."
+                );
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>

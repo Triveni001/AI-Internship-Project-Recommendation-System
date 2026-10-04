@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Internship Details - AI Matcher</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        AI Matcher
+    </div>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">Internships</a>
+        <a href="projects.html">Projects</a>
+        <a href="profile-view.html">Profile</a>
+    </nav>
+
+</header>
+
+
+<section class="dashboard">
+
+    <div
+        class="internship-card"
+        id="internshipDetails"
+        style="max-width: 750px; margin: 50px auto;"
+    >
+
+        <h1>Loading...</h1>
+
+    </div>
+
+</section>
+
+
+<script>
+
+async function loadInternshipDetails() {
+
+    const container =
+        document.getElementById("internshipDetails");
+
+
+    const urlParams =
+        new URLSearchParams(window.location.search);
+
+
+    const internshipId =
+        urlParams.get("id");
+
+
+    if (!internshipId) {
+
+        container.innerHTML = `
+            <h1>No Internship Selected</h1>
+
+            <p>
+                Please go back to the dashboard
+                and select an internship.
+            </p>
+
+            <a
+                href="dashboard.html"
+                class="btn"
+            >
+                Back to Internships
+            </a>
+        `;
+
+        return;
+    }
+
+
+    try {
+
+        const response = await fetch(
+            "http://127.0.0.1:8000/internships/" + internshipId
+        );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP Error: " + response.status
+            );
+
+        }
+
+
+        const internship =
+            await response.json();
+
+
+        container.innerHTML = `
+
+            <h1>
+                ${internship.title}
+            </h1>
+
+            <p class="company">
+                ${internship.company}
+            </p>
+
+
+            <h2>Job Description</h2>
+
+            <p>
+                ${internship.description}
+            </p>
+
+
+            <h2>Required Skills</h2>
+
+            <p>
+                ${internship.skills}
+            </p>
+
+
+            <h2>Duration</h2>
+
+            <p>
+                ${internship.duration}
+            </p>
+
+
+            <h2>Location</h2>
+
+            <p>
+                ${internship.location}
+            </p>
+
+
+            <br>
+
+
+            <button
+    class="btn"
+    onclick="applyInternshipToBackend(
+        ${internship.id},
+        '${internship.title}',
+        '${internship.company}'
+    )"
+>
+    Apply Now
+</button>
+
+        `;
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+
+        container.innerHTML = `
+
+            <h1>
+                Unable to Load Internship
+            </h1>
+
+            <p>
+                Please check whether the backend
+                server is running.
+            </p>
+
+        `;
+
+    }
+
+}
+
+
+loadInternshipDetails();
+
+</script>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
